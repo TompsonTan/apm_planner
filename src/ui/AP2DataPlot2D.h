@@ -67,27 +67,41 @@ private slots:
     void addGraphLeft();
     void removeGraphLeft();
     void axisDoubleClick(QCPAxis* axis,QCPAxis::SelectablePart part,QMouseEvent* evt);
-    void graphAddedToGroup(QString name,QString group);
+    void graphAddedToGroup(QString name,QString group,double scale);
     void graphRemovedFromGroup(QString name);
+    void graphManualRange(QString name, double min, double max);
+    void showOnlyClicked();
+    void showAllClicked();
+    void graphControlsButtonClicked();
 private:
+    class Graph
+    {
+    public:
+        bool isManualRange;
+        QString groupName;
+        bool isInGroup;
+        double axisIndex;
+        QCPAxis *axis;
+        QCPGraph *graph;
+        //QList<QPair<double,double> > onlineValuesList;
+        //QList<QPair<int,QVariantMap> > offlineValuesList;
+    };
+
+    QMap<QString,Graph> m_graphClassMap;
+
+    bool m_showOnlyActive;
     //Map of group name to a list of graph titles
     QMap<QString,QList<QString> > m_graphGrouping;
     //Map from group titles to the value axis range.
     QMap<QString,QCPRange> m_graphGroupRanges;
-    //Reverse of m_graphGrouping
-    QMap<QString,QString> m_graphToGroupMap;
-    //Graph name to axis index in m_wideAxisRect
-    QMap<QString,int> m_nameToAxisIndex;
     //Map from the spreadsheet view row name (ATT,GPS,etc), to the header names (roll,pitch,yaw or long,lat,alt)
     QMap<QString,QString> m_tableHeaderNameMap;
-    //Graph name to value axis
-    QMap<QString,QCPAxis*> m_axisList;
-    //Graph name to actual QCustomPlot graph.
-    QMap<QString,QCPGraph*> m_graphMap;
     //Graph name to list of values for "online" mode
     QMap<QString,QList<QPair<double,double> > > m_onlineValueMap;
     //Map from graph name to list of values for "offline" mode
     QMap<QString,QList<QPair<int,QVariantMap> > > m_dataList;
+
+    QList<QPair<qint64,double> > m_onlineValueTimeoutList;
 
     //List of graph names, used in m_axisList, m_graphMap,m_graphToGroupMap and the like as the graph name
     QList<QString> m_graphNameList;
@@ -99,7 +113,8 @@ private:
     DataSelectionScreen *m_dataSelectionScreen;
     bool m_logLoaded;
     //Current "index", X axis on graph. Used to keep all the graphs lined up.
-    int m_currentIndex;
+    qint64 m_currentIndex;
+    qint64 m_startIndex; //epoch msecs since graphing started
     QAction *m_addGraphAction;
     UASInterface *m_uas;
     QProgressDialog *m_progressDialog;

@@ -172,7 +172,7 @@ void AdvParameterList::loadButtonClicked()
     QString filestr = file.readAll();
     file.close();
 
-    ParamCompareDialog::populateParamListFromString(filestr, &m_parameterList);
+    ParamCompareDialog::populateParamListFromString(filestr, &m_parameterList, this);
 
     foreach(UASParameter* param, m_parameterList){
         // Modify the elements in the table widget.
@@ -399,6 +399,7 @@ void AdvParameterList::downloadRemoteFiles()
     QLOG_DEBUG() << "DownloadRemoteFiles";
 
     DownloadRemoteParamsDialog* dialog = new DownloadRemoteParamsDialog();
+    dialog->hideLoadFromFileButton();
 
     if(dialog->exec() == QDialog::Accepted) {
         // Pull the selected file and
