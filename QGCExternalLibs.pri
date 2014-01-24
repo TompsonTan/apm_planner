@@ -480,8 +480,7 @@ WindowsCrossBuild {
         $$BASEDIR/libs/lib/sdl/include \
 
         LIBS += \
-        -Llibs/lib/sdl/win32 \
-        -lSDL.dll
+        -Llib/sdl/win32/ -lSDL
 }
 
 #
@@ -495,4 +494,3 @@ LinuxBuild {
 		-lflite_cmulex \
 		-lflite
 }
-

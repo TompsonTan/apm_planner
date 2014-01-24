@@ -156,7 +156,7 @@ Rectangle {
 
         Button {
             id: plotView
-            label: "GRAPHS"
+            label: qsTr("GRAPHS")
             image: "./resources/apmplanner/toolbar/simulation.png"
             onClicked: globalObj.triggerPlotView()
         }

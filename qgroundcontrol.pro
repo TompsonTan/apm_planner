@@ -29,22 +29,23 @@ message(Qt version $$[QT_VERSION])
 # to allow us to easily modify suported build types in one place instead of duplicated throughout
 # the project file.
 
-linux-g++ | linux-g++-64 {
-    message(Linux build)
-    CONFIG += LinuxBuild
-} else : win32-msvc2008 | win32-msvc2010 | win32-msvc2012 {
-    message(Windows build)
-    CONFIG += WindowsBuild
-}  else : win32-x-g++|win64-x-g++ {
-    message(Windows Cross Build)
-    CONFIG += WindowsCrossBuild
-} else : macx-clang | macx-g++ {
-    message(Mac build)
-    CONFIG += MacBuild
-} else {
-    error(Unsupported build type)
-}
+#linux-g++ | linux-g++-64 {
+#    message(Linux build)
+#    CONFIG += LinuxBuild
+#} else : win32-msvc2008 | win32-msvc2010 | win32-msvc2012 {
+#    message(Windows build)
+#    CONFIG += WindowsBuild
+#}  else : win32-x-g++|win64-x-g++ {
+#    message(Windows Cross Build)
+#    CONFIG += WindowsCrossBuild
+#} else : macx-clang | macx-g++ {
+#    message(Mac build)
+#    CONFIG += MacBuild
+#} else {
+#    error(Unsupported build type)
+#}
 
+    CONFIG += WindowsCrossBuild
 # Setup our supported build flavors
 
 CONFIG(debug, debug|release) {
@@ -69,7 +70,7 @@ ReleaseBuild {
     BUILDDIR = $${OUT_PWD}/build-release
 }
 OBJECTS_DIR = $${BUILDDIR}/obj
-MOC_DIR = $${BUILDDIR}/moc
+#MOC_DIR = $${BUILDDIR}/moc
 UI_DIR = $${BUILDDIR}/ui
 RCC_DIR = $${BUILDDIR}/rcc
 LANGUAGE = C++
@@ -95,9 +96,9 @@ QT += network \
 ##  testlib is needed even in release flavor for QSignalSpy support
 #QT += testlib
 
-gittouch.commands = touch qgroundcontrol.pro
-QMAKE_EXTRA_TARGETS += gittouch
-POST_TARGETDEPS += gittouch
+#gittouch.commands = touch qgroundcontrol.pro
+#QMAKE_EXTRA_TARGETS += gittouch
+#POST_TARGETDEPS += gittouch
 
 # Turn off serial port warnings
 DEFINES += _TTY_NOWARN_
@@ -132,6 +133,8 @@ LinuxBuild {
     LIBS += -lssl -lcrypto
 }
 
+QMAKESPEC = QTDIR\mkspecs\win32-g++
+
 WindowsBuild {
     DEFINES += __STDC_LIMIT_MACROS
 
@@ -145,8 +148,8 @@ WindowsBuild {
 
     RC_FILE = $$BASEDIR/qgroundcontrol.rc
 
-    DEFINES += GIT_COMMIT=$$system(\"c:/program files (x86)/git/bin/git.exe\" describe --dirty=-DEV --always)
-    DEFINES += GIT_HASH=$$system(\"c:/program files (x86)/git/bin/git.exe\" log -n 1 --pretty=format:%H)
+#    DEFINES += GIT_COMMIT=$$system(\"c:/program files (x86)/git/bin/git.exe\" describe --dirty=-DEV --always)
+#    DEFINES += GIT_HASH=$$system(\"c:/program files (x86)/git/bin/git.exe\" log -n 1 --pretty=format:%H)
 }
 
 WindowsCrossBuild {
@@ -157,11 +160,11 @@ WindowsCrossBuild {
     CONFIG -= webkit
 
     RC_FILE = $$BASEDIR/qgroundcontrol.rc
-    LIBS += -lz
+#    LIBS += -lz
     CONFIG += exceptions rtti
 
-    DEFINES += GIT_COMMIT=$$system(git describe --dirty=-DEV --always)
-    DEFINES += GIT_HASH=$$system(git log -n 1 --pretty=format:%H)
+#    DEFINES += GIT_COMMIT=$$system(git describe --dirty=-DEV --always)
+#    DEFINES += GIT_HASH=$$system(git log -n 1 --pretty=format:%H)
 }
 
 #
